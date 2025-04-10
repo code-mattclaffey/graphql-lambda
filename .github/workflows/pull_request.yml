@@ -1,0 +1,10 @@
+name: pull_requests_checks
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    uses: ./.github/workflows/quality.yml
+    secrets: inherit
+

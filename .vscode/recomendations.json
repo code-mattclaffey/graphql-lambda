@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "mquandalle.graphql",
+    "streetsidesoftware.code-spell-checker",
+    "editorconfig.edi",
+    "dbaeumer.vscode-eslint",
+    "graphql.vscode-graphql",
+    "graphql.vscode-graphql-syntax",
+    "wix.vscode-import-cost",
+    "ms-vscode.vscode-typescript-next",
+    "firsttris.vscode-jest-runner",
+    "esbenp.prettier-vscode"
+  ]
+}

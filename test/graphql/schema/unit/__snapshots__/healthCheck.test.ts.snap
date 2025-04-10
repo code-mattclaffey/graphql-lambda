@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`healthCheckSchema should return GOOD on the health check query 1`] = `
+{
+  "definitions": [
+    {
+      "description": undefined,
+      "directives": [],
+      "kind": "EnumTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "HealthStatus",
+      },
+      "values": [
+        {
+          "description": undefined,
+          "directives": [],
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "GOOD",
+          },
+        },
+        {
+          "description": undefined,
+          "directives": [],
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "BAD",
+          },
+        },
+      ],
+    },
+    {
+      "description": undefined,
+      "directives": [],
+      "fields": [
+        {
+          "arguments": [],
+          "description": undefined,
+          "directives": [],
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "health",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "HealthStatus",
+            },
+          },
+        },
+      ],
+      "interfaces": [],
+      "kind": "ObjectTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "Query",
+      },
+    },
+  ],
+  "kind": "Document",
+  "loc": {
+    "end": 89,
+    "start": 0,
+  },
+}
+`;

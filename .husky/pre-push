@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running build check before pushing to $BRANCH_NAME..."
+
+# Run the build command
+npm run build
+
+# Get the exit code of the build command
+BUILD_EXIT_CODE=$?
+
+if [ $BUILD_EXIT_CODE -ne 0 ]; then
+    echo "❌ Build failed! Please fix the build issues before pushing."
+    exit 1
+else
+    echo "✅ Build successful! Proceeding with push."
+    exit 0
+fi

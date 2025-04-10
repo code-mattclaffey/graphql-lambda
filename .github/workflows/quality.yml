@@ -1,0 +1,84 @@
+name: Quality checks
+
+on:
+  workflow_call:
+
+env:
+
+
+jobs:
+  quality_checks:
+    name: Quality checks
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/dist/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm ci
+
+      - name: Security Audit Checks
+        run: npm run audit
+
+      - name: Static testing
+        run: npm run lint
+
+      - name: Run Unit tests
+        run: |
+          npx jest --ci --collectCoverage --detectOpenHandles --forceExit
+
+      - run: |
+          mv coverage/coverage-final.json coverage/coverage-final-${{matrix.shard}}.json
+
+      - uses: actions/upload-artifact@v4.3.0
+        name: Upload coverage artifacts
+        with:
+          name: coverage-artifacts-${{matrix.shard}}
+          path: coverage/coverage-final-${{matrix.shard}}.json
+          retention-days: 1
+
+  report_coverage:
+    name: Merge and validate coverage threshold
+    runs-on: ubuntu-latest
+    needs: [quality_checks]
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+      pages: write
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4.1.3
+        with:
+          path: coverage
+          merge-multiple: true
+      - name: Merge & validate code coverage
+        run: |
+          echo "Merging coverage for:"
+          ls ./coverage
+          npx nyc merge coverage/ merged-output/coverage-final.json
+          npx nyc report --reporter=text-summary --reporter=lcov --reporter=json-summary -t merged-output
+          npx nyc check-coverage --branches 40 --functions 46 --lines 55 --statements 54 -t merged-output
+          ls ./coverage
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
